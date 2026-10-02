@@ -1,0 +1,27 @@
+# secrets and envs
+.env
+.venv/
+# caches
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+# pipeline output and scratch (agents write scratch under work/)
+work/
+out/
+models/
+# media: never commit, except small test fixtures (each under 2 MB)
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.wav
+*.m4a
+*.aiff
+*.mp3
+!tests/fixtures/*.mp4
+!tests/fixtures/*.wav
+# Claude Code personal settings and worktrees
+.claude/settings.local.json
+.claude/worktrees/
+.DS_Store
