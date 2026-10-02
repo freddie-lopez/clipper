@@ -3,9 +3,9 @@
 # Stage 5 (score). Price is USD per million tokens, used for cost logging.
 # Check anthropic.com/pricing when changing the model: success criterion 12
 # needs scoring under $0.50 per hour of video.
-scoring_model = "claude-sonnet-5-5"
-scoring_price_input_per_mtok = 2.00
-scoring_price_output_per_mtok = 10.00
+scoring_model = "claude-opus-5-5"
+scoring_price_input_per_mtok = 4.00
+scoring_price_output_per_mtok = 20.00
 batch_size = 20
 
 # Stage 3 (candidates). Bounds are on the padded clip, in seconds.
