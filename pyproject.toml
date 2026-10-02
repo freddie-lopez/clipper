@@ -1,0 +1,67 @@
+[project]
+name = "clipper"
+version = "0.1.0"
+description = "Local CLI: long video in, top-K vertical captioned clips out."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "anthropic==1.11.0",
+    "faster-whisper==1.2.1",
+    "jinja2==3.1.6",
+    "mediapipe==1.0.1",
+    "mlx-whisper==0.4.3 ; platform_machine == 'arm64' and sys_platform == 'darwin'",
+    "numpy==2.5.3",
+    "pydantic==2.13.5",
+    "python-dotenv==1.2.4",
+    "soundfile==0.14.0",
+    "typer==0.27.2",
+]
+
+[project.scripts]
+clipper = "clipper.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["clipper"]
+
+[tool.uv]
+# Lock only for the two platforms we run on: Apple-silicon Macs and Linux CI.
+environments = [
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+
+[dependency-groups]
+dev = [
+    "mypy==2.4.0",
+    "pytest==9.1.1",
+    "ruff==0.16.10",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not slow'"
+markers = [
+    "slow: needs models, real decoding or ffmpeg runs; local only (run with -m slow)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["clipper"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["mlx_whisper", "mlx_whisper.*", "mediapipe", "mediapipe.*", "faster_whisper", "faster_whisper.*", "soundfile"]
+ignore_missing_imports = true

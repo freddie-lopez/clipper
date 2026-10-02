@@ -1,0 +1,31 @@
+# Clipper settings. Every tunable lives here; code never hard-codes these.
+
+# Stage 5 (score). Price is USD per million tokens, used for cost logging.
+# Check anthropic.com/pricing when changing the model: success criterion 12
+# needs scoring under $0.50 per hour of video.
+scoring_model = "claude-sonnet-5-5"
+scoring_price_input_per_mtok = 2.00
+scoring_price_output_per_mtok = 10.00
+batch_size = 20
+
+# Stage 3 (candidates). Bounds are on the padded clip, in seconds.
+clip_min_s = 20.0
+clip_max_s = 60.0
+candidates_per_hour_max = 300
+
+# Stage 2 (transcribe). Engine is "faster-whisper" or "mlx-whisper";
+# phase 2 picks the Mac default by measured timings (ADR 0002).
+whisper_engine = "faster-whisper"
+whisper_model = "small.en"
+
+# ffmpeg with libass (the `subtitles` filter). A bare name is looked up on PATH.
+ffmpeg_bin = "ffmpeg"
+
+# Stage 6 (select). Final score = weighted sum; tuned in phase 9.
+[weights]
+hook = 0.30
+standalone = 0.25
+payoff = 0.20
+energy = 0.10
+loudness = 0.10
+rate = 0.05

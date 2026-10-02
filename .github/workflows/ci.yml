@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install ffmpeg (Ubuntu's build includes libass)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Install dependencies from the lockfile
+        run: uv sync --locked
+
+      - name: pytest (offline; slow tests excluded by addopts)
+        run: uv run pytest -q
+
+      - name: ruff
+        run: uv run ruff check .
+
+      - name: mypy
+        run: uv run mypy clipper
